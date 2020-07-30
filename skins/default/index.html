@@ -1,34 +1,102 @@
-<div class="rxp_tag_related">
-    <!--@if($rxp_tag_related->title)--><div class="title">{$rxp_tag_related->title}</div><!--@end-->
+<div class="rxp-tag-related">
+    <div cond="$rxp_tag_related->title" class="rxp-tag-related__title">{$rxp_tag_related->title}</div>
+
     <ol>
-    <!--@foreach($rxp_tag_related_document_list as $oDocument)-->
-        <li>
-        <!--// 작성일 -->
-        <!--@if($rxp_tag_related->print_regdate != 'N')--><span class="regdate">[{$oDocument->getRegdate('Y/m/d')}]</span><!--@end-->
+        <!--@foreach($rxp_tag_related_document_list as $oDocument)-->
+        <li class="rxp-tag-related__item rxp-tr-item">
+            <!--// 모듈 제목 -->
+            <em cond="$rxp_tag_related->print_module_title == 'Y'" class="rxp-tr-item__module_title">{$oDocument->get('module_title')}</em>
 
-        <!--// 모듈제목 -->
-        <!--@if($rxp_tag_related->print_module_title == 'Y')--><span class="module_title">{$oDocument->get('module_title')}</span><!--@end-->
+            <!--// 제목 -->
+            <strong><a href="{$oDocument->getPermanentUrl()}" class="rxp-tr-item__title" <!--@if($rxp_tag_related->link_target == 'new')-->onclick="window.open(this.href); return false;"<!--@endif--> <!--@if($rxp_tag_related->cut_subject)-->title="{$oDocument->getTitleText()}"<!--@endif-->>{$oDocument->getTitleText($rxp_tag_related->cut_subject)}</a></strong>
 
-        <!--// 제목 -->
-        <a href="{$oDocument->getPermanentUrl()}" <!--@if($rxp_tag_related->link_target == 'new')-->onclick="window.open(this.href); return false;"<!--@endif--> <!--@if($rxp_tag_related->cut_subject)-->title="{$oDocument->getTitleText()}"<!--@endif-->>{$oDocument->getTitleText($rxp_tag_related->cut_subject)}</a>
+            <!--// 작성자 -->
+            <em cond="$rxp_tag_related->print_author != 'N'" class="rxp-tr-item__author member_{$oDocument->get('member_srl')}"> by {$oDocument->getNickName()}</em>
 
-        <!--// 작성자 -->
-        <!--@if($rxp_tag_related->print_author != 'N')--><span class="author member_{$oDocument->get('member_srl')}"> by {$oDocument->getNickName()}</span><!--@end-->
+            <!--// 작성일 -->
+            <em cond="$rxp_tag_related->print_regdate != 'N'" class="rxp-tr-item__regdate">[{$oDocument->getRegdate('Y-m-d')}]</em>
 
-        <!--// 조회수/추천수 -->
-        <!--@if(($rxp_tag_related->print_voted_count != 'N' && $oDocument->get('voted_count') > 0) || $rxp_tag_related->print_readed_count != 'N')-->
-        {@ $vote_read_count = array()}
-            <!--@if($rxp_tag_related->print_readed_count != 'N')-->
-                {@ $vote_read_count[] = '<span class="readed_count" title="조회 수">'.$oDocument->get('readed_count').'</span>'}
-            <!--@endif-->
-            <!--@if($rxp_tag_related->print_voted_count != 'N' && $oDocument->get('voted_count') > 0)-->
-                {@ $vote_read_count[] = '<span class="voted_count" title="추천 수">'.$oDocument->get('voted_count').'</span>'}
-            <!--@endif-->
-            <span class="readAndVoted">({implode(', ', $vote_read_count)})</span>
-        <!--@endif-->
+            <!--// 조회수/추천수 -->
+            <block cond="($rxp_tag_related->print_voted_count != 'N' && $oDocument->get('voted_count') > 0) || $rxp_tag_related->print_readed_count != 'N'">
+                {@ $vote_read_count = array()}
+                <!--@if($rxp_tag_related->print_readed_count != 'N')-->
+                {@ $vote_read_count[] = '<em class="rxp-tr-item__readed-count" title="조회 수">'.$oDocument->get('readed_count').'</em>'}
+                <!--@endif-->
+                <!--@if($rxp_tag_related->print_voted_count != 'N' && $oDocument->get('voted_count') > 0)-->
+                {@ $vote_read_count[] = '<em class="rxp-tr-item__voted-count" title="추천 수">'.$oDocument->get('voted_count').'</em>'}
+                <!--@endif-->
+                <span class="rxp-tr-item__count">({implode(', ', $vote_read_count)})</span>
+            </block>
 
-        <!--@if($rxp_tag_related->print_comment_count != 'N' && $oDocument->getCommentCount() >= 1)--><span class="comment_cnt" title="댓글 수">*{$oDocument->getCommentCount()}</span><!--@end-->
+            <em cond="$rxp_tag_related->print_comment_count != 'N' && $oDocument->getCommentCount() >= 1" class="rxp-tr-item__comment-count" title="댓글 수">*{$oDocument->getCommentCount()}</em>
         </li>
-    <!--@endforeach-->
+        <!--@endforeach-->
     </ol>
 </div>
+
+<style>
+    .rxp-tag-related ol,
+    .rxp-tag-related li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .rxp-tag-related {
+        border: 1px solid #e5e5e5;
+        padding: 10px;
+        margin: 10px 0;
+    }
+
+    .rxp-tag-related .rxp-tag-related__title {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #444;
+        border-bottom: #e5e5e5 1px solid;
+        padding: 0 0 5px 5px;
+        margin-bottom: 10px;
+    }
+
+    .rxp-tag-related .rxp-tr-item {
+        list-style: none;
+        margin: 3px 0;
+        padding: 0 5px;
+        line-height: 1.6;
+    }
+
+    .rxp-tag-related .rxp-tr-item__title {
+        color: #4a4a4a;
+    }
+
+    .rxp-tag-related .rxp-tr-item__regdate {
+        font-size: .85em;
+        color: #aaa;
+    }
+
+    .rxp-tag-related .rxp-tr-item__module_title {
+        font-size: .85em;
+        color: #aaa;
+    }
+
+    .rxp-tag-related .rxp-tr-item__comment-count {
+        font-weight: normal;
+        font-size: 0.85em;
+    }
+
+    .rxp-tag-related .rxp-tr-item__author {
+        color: #aaa;
+    }
+
+    .rxp-tag-related .rxp-tr-item__count {
+        font-size: .8em;
+        color: #aaa;
+    }
+
+    .rxp-tag-related .rxp-tr-item__voted-count {
+        color: #c8a64b;
+    }
+
+    .rxp-tag-related .rxp-tr-item__readed-count {
+        color: #4bc4c8;
+    }
+</style>
