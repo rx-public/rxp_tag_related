@@ -26,7 +26,10 @@ $GLOBALS['_rxp_tag_related_addon_info_'] = $addon_info;
 
 require_once($addon_path . 'rxp_tag_related.lib.php');
 
-$pos_regx = '|<\!--AfterDocument\(([0-9]+),([0-9]+)\)-->|is';
-$output = preg_replace_callback($pos_regx, getTagRelation, $output);
-
+if (stripos($output, '<!--rxp-tag-related(')) {
+    $posRegx = '/<\!--rxp-tag-related\(([0-9]+),([0-9]+)\)-->/is';
+} else {
+    $posRegx = '/<\!--AfterDocument\(([0-9]+),([0-9]+)\)-->/is';
+}
+$output = preg_replace_callback($posRegx, getRxpTagRelated, $output);
 /* EOF */
