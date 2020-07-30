@@ -10,14 +10,8 @@ if (defined('RX_VERSION'))
 }
 if(Context::getResponseMethod() != 'HTML' || Context::get('module') == 'admin') return;
 
-// 미리 스킨의 CSS 파일 로드
-if($called_position == 'before_module_proc')
-{
-	$addon_info->skin_path = file_exists($addon_info->skin . '/index.html') ? $addon_info->skin : 'default';
-	$addon_info->skin_path = './addons/rxp_tag_related/skins/' . $addon_info->skin_path;
-	Context::addCSSFile($addon_info->skin_path . '/css/default.css');
-
-	return;
+if (Context::getResponseMethod() !== 'HTML' || Context::get('module') === 'admin') {
+    return;
 }
 
 if($called_position != 'before_display_content') return;
