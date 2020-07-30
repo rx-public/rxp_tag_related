@@ -1,20 +1,21 @@
 <?php
 /**
+ * @author RXPublic <rhymixpublic@gmail.com>
  * @author BNU <bnufactory@gmail.com>
- * http://xemagazine.com
+ * @license https://creativecommons.org/publicdomain/zero/1.0/deed.ko CC0-1.0
  **/
 
-if (defined('RX_VERSION'))
-{
-	// return;
+if (!defined('RX_VERSION')) {
+    exit;
 }
-if(Context::getResponseMethod() != 'HTML' || Context::get('module') == 'admin') return;
 
 if (Context::getResponseMethod() !== 'HTML' || Context::get('module') === 'admin') {
     return;
 }
 
-if($called_position != 'before_display_content') return;
+if ($called_position !== 'before_display_content') {
+    return;
+}
 
 // 변수 정리
 $addon_info->skin_path = file_exists($addon_info->skin . '/index.html') ? $addon_info->skin : 'default';
